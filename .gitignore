@@ -1,0 +1,5 @@
+# Project-Specific
+crawler/.env
+
+# OS-Specific
+.DS_Store
