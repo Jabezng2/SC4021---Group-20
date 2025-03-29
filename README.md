@@ -21,13 +21,34 @@
    pip install -r requirements.txt
    ```
 
-4. Set up Apache Solr:
+4. Apache Solr Setup and Guide:
    - Download and install Solr 9.x from https://solr.apache.org/downloads.html
-   - Download the BINARY version
+   - Download the BINARY Release
+   - Navigate to your Solr 9.x root directory
    - Start Solr: `bin/solr start` (Unix) or `bin\solr.cmd start` (Windows)
-   - Create a core: `bin/solr create -c streaming_opinions` (Unix) or `bin\solr.cmd create -c streaming_opinions` (Windows)
+   - Start Solr in standalone mode not cloud
+   - Verify by navigating to http://localhost:8983/solr/
+   - Create a core: `bin/solr create -c crypto_opinions` (Unix) or `bin\solr.cmd create -c crypto_opinions` (Windows)
    - Copy schema and configuration:
      ```
-     cp solr_files/schema.xml <solr_installation>/server/solr/streaming_opinions/conf/
+     cp solr/managed-schema.xml <solr_installation>/server/solr/crypto_opinions/conf/
      ```
    - Restart Solr: `bin/solr restart` (Unix) or `bin\solr.cmd restart` (Windows)
+   - Stop Existing Process:
+     ```
+     bin/solr stop
+     ```
+     OR
+     ```
+     lsof -i :<port number>
+     kill -9 <pid>
+     ```
+
+5. Indexing
+- Ensure that Solr is running. Restart if needed.
+- Import data to Solr:
+```
+cd solr
+python data_to_solr.py
+```
+- Indexing is completed
