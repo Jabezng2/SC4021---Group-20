@@ -1,7 +1,4 @@
 # Cryptocurrency Exchange Opinion Search Engine
-
-# Project Overview
-
 ## Installation
 
 1. Clone the repository:
