@@ -1,0 +1,44 @@
+2025-03-29 14:00:21.157 INFO  (main) [c: s: r: x: t:] o.e.j.s.Server jetty-10.0.22; built: 2024-06-27T16:03:51.502Z; git: 5c8471e852d377fd726ad9b1692c35ffc5febb09; jvm 17.0.3+7
+2025-03-29 14:00:21.376 WARN  (main) [c: s: r: x: t:] o.e.j.u.DeprecationWarning Using @Deprecated Class org.eclipse.jetty.servlet.listener.ELContextCleaner
+2025-03-29 14:00:21.390 INFO  (main) [c: s: r: x: t:] o.a.s.s.CoreContainerProvider Using logger factory org.apache.logging.slf4j.Log4jLoggerFactory
+2025-03-29 14:00:21.394 INFO  (main) [c: s: r: x: t:] o.a.s.s.CoreContainerProvider  ___      _       Welcome to Apache Solr™ version 9.8.1
+2025-03-29 14:00:21.394 INFO  (main) [c: s: r: x: t:] o.a.s.s.CoreContainerProvider / __| ___| |_ _   Starting in cloud mode on port 8983
+2025-03-29 14:00:21.394 INFO  (main) [c: s: r: x: t:] o.a.s.s.CoreContainerProvider \__ \/ _ \ | '_|  Install dir: /Users/jabezng/Desktop/SC4021---Group-20/backend/solr-9.8.1
+2025-03-29 14:00:21.394 INFO  (main) [c: s: r: x: t:] o.a.s.s.CoreContainerProvider |___/\___/_|_|    Start time: 2025-03-29T14:00:21.394785Z
+2025-03-29 14:00:21.396 INFO  (main) [c: s: r: x: t:] o.a.s.s.CoreContainerProvider Solr started with "-XX:+CrashOnOutOfMemoryError" that will crash on any OutOfMemoryError exception. The cause of the OOME will be logged in the crash file at the following path: /Users/jabezng/Desktop/SC4021---Group-20/backend/solr-9.8.1/server/logs/jvm_crash_14724.log
+2025-03-29 14:00:21.411 INFO  (main) [c: s: r: x: t:] o.a.s.s.CoreContainerProvider Solr Home: /Users/jabezng/Desktop/SC4021---Group-20/backend/solr-9.8.1/server/solr (source: system property: solr.solr.home)
+2025-03-29 14:00:21.421 INFO  (main) [c: s: r: x: t:] o.a.s.c.SolrXmlConfig Loading solr.xml from /Users/jabezng/Desktop/SC4021---Group-20/backend/solr-9.8.1/server/solr/solr.xml
+2025-03-29 14:00:21.447 INFO  (main) [c: s: r: x: t:] o.a.s.c.SolrResourceLoader Added 1 libs to classloader, from paths: [/Users/jabezng/Desktop/SC4021---Group-20/backend/solr-9.8.1/lib]
+2025-03-29 14:00:21.928 INFO  (main) [c: s: r: x: t:] o.a.s.u.t.SimplePropagator Always-on trace id generation enabled.
+2025-03-29 14:00:22.088 WARN  (main) [c: s: r: x: t:] o.a.s.u.StartupLoggingUtils Jetty request logging enabled. Will retain logs for last 3 days. See chapter "Configuring Logging" in reference guide for how to configure.
+2025-03-29 14:00:22.093 INFO  (main) [c: s: r: x: t:] o.a.s.c.SolrZkServerProps Reading configuration from: /Users/jabezng/Desktop/SC4021---Group-20/backend/solr-9.8.1/server/solr/zoo.cfg
+2025-03-29 14:00:22.094 INFO  (main) [c: s: r: x: t:] o.a.s.c.SolrZkServer STARTING EMBEDDED ENSEMBLE ZOOKEEPER SERVER at port 9983, listening on host 127.0.0.1
+2025-03-29 14:00:22.094 WARN  (main) [c: s: r: x: t:] o.a.s.c.SolrZkServer Embedded Zookeeper is not recommended in production environments. See Reference Guide for details.
+2025-03-29 14:00:22.115 WARN  (embeddedZkServer) [c: s: r: x: t:] o.a.z.s.ServerCnxnFactory maxCnxns is not configured, using default value 0.
+2025-03-29 14:00:22.600 INFO  (main) [c: s: r: x: t:] o.a.s.c.ZkContainer Zookeeper client=127.0.0.1:9983
+2025-03-29 14:00:22.615 INFO  (main) [c: s: r: x: t:] o.a.s.c.DistributedClusterStateUpdater Creating DistributedClusterStateUpdater with useDistributedStateUpdate=false. Solr will be using Overseer based cluster state updates.
+2025-03-29 14:00:22.641 INFO  (main) [c: s: r: x: t:] o.a.s.c.c.ConnectionManager Waiting up to 15000ms for client to connect to ZooKeeper
+2025-03-29 14:00:22.671 INFO  (zkCallback-11-thread-1) [c: s: r: x: t:] o.a.s.c.c.ConnectionManager zkClient has connected
+2025-03-29 14:00:22.671 INFO  (main) [c: s: r: x: t:] o.a.s.c.c.ConnectionManager Client is connected to ZooKeeper
+2025-03-29 14:00:22.892 WARN  (main) [c: s: r: x: t:] o.a.s.c.ZkController Contents of zookeeper /security.json are world-readable; consider setting up ACLs as described in https://solr.apache.org/guide/solr/latest/deployment-guide/zookeeper-access-control.html
+2025-03-29 14:00:22.909 INFO  (main) [c: s: r: x: t:] o.a.s.c.DistributedClusterStateUpdater Creating DistributedClusterStateUpdater with useDistributedStateUpdate=false. Solr will be using Overseer based cluster state updates.
+2025-03-29 14:00:22.932 INFO  (main) [c: s: r: x: t:] o.a.s.c.OverseerElectionContext I am going to be the leader localhost:8983_solr
+2025-03-29 14:00:22.942 INFO  (main) [c: s: r: x: t:] o.a.s.c.Overseer Overseer (id=72081879040196608-localhost:8983_solr-n_0000000000) starting
+2025-03-29 14:00:22.999 INFO  (main) [c: s: r: x: t:] o.a.s.c.ZkController Register node as live in ZooKeeper:/live_nodes/localhost:8983_solr
+2025-03-29 14:00:23.000 INFO  (OverseerStateUpdate-72081879040196608-localhost:8983_solr-n_0000000000) [c: s: r: x: t:] o.a.s.c.Overseer Starting to work on the main queue : localhost:8983_solr
+2025-03-29 14:00:23.008 INFO  (zkCallback-11-thread-1) [c: s: r: x: t:] o.a.s.c.c.ZkStateReader Updated live nodes from ZooKeeper... (0) -> (1)
+2025-03-29 14:00:23.026 WARN  (main) [c: s: r: x: t:] o.a.s.c.CoreContainer Not all security plugins configured!  authentication=disabled authorization=disabled.  Solr is only as secure as you make it. Consider configuring authentication/authorization before exposing Solr to users internal or external.  See https://s.apache.org/solrsecurity for more info
+2025-03-29 14:00:23.416 INFO  (main) [c: s: r: x: t:] o.a.s.c.CorePropertiesLocator Found 0 core definitions underneath /Users/jabezng/Desktop/SC4021---Group-20/backend/solr-9.8.1/server/solr
+2025-03-29 14:00:23.505 WARN  (main) [c: s: r: x: t:] o.g.j.m.i.MessagingBinders A class jakarta.activation.DataSource for a default provider MessageBodyWriter<jakarta.activation.DataSource> was not found. The provider is not available.
+2025-03-29 14:00:23.636 INFO  (main) [c: s: r: x: t:] o.a.s.j.SolrRequestAuthorizer Creating a new SolrRequestAuthorizer
+2025-03-29 14:00:23.703 INFO  (main) [c: s: r: x: t:] o.e.j.s.h.ContextHandler Started o.e.j.w.WebAppContext@13e698c7{solr-jetty-context.xml,/solr,file:///Users/jabezng/Desktop/SC4021---Group-20/backend/solr-9.8.1/server/solr-webapp/webapp/,AVAILABLE}{/Users/jabezng/Desktop/SC4021---Group-20/backend/solr-9.8.1/server/solr-webapp/webapp}
+2025-03-29 14:00:23.706 INFO  (main) [c: s: r: x: t:] o.e.j.s.RequestLogWriter Opened /Users/jabezng/Desktop/SC4021---Group-20/backend/solr-9.8.1/server/logs/2025_03_29.request.log
+2025-03-29 14:00:23.708 INFO  (main) [c: s: r: x: t:] o.e.j.s.AbstractConnector Started ServerConnector@588ab592{HTTP/1.1, (http/1.1, h2c)}{127.0.0.1:8983}
+2025-03-29 14:00:23.709 INFO  (main) [c: s: r: x: t:] o.e.j.s.Server Started Server@60b85ba1{STARTING}[10.0.22,sto=0] @4149ms
+2025-03-29 14:00:38.279 INFO  (qtp1437988306-22-localhost-1) [c: s: r: x: t:localhost-1] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=javabin&version=2} status=0 QTime=29
+2025-03-29 14:00:38.304 INFO  (qtp1437988306-24-localhost-2) [c: s: r: x: t:localhost-2] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/collections params={action=CLUSTERSTATUS&wt=javabin&version=2} status=0 QTime=6
+2025-03-29 14:00:48.327 INFO  (qtp1437988306-22-localhost-5) [c: s: r: x: t:localhost-5] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1743256848293} status=0 QTime=1
+2025-03-29 14:00:48.336 INFO  (qtp1437988306-20-localhost-4) [c: s: r: x: t:localhost-4] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1743256848293} status=0 QTime=12
+2025-03-29 14:00:48.362 INFO  (qtp1437988306-20-localhost-6) [c: s: r: x: t:localhost-6] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1743256848293} status=0 QTime=1
+2025-03-29 14:00:48.368 INFO  (qtp1437988306-77-localhost-7) [c: s: r: x: t:localhost-7] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/collections params={action=LIST&wt=json&_=1743256848293} status=0 QTime=6
+2025-03-29 14:00:48.372 INFO  (qtp1437988306-22-localhost-8) [c: s: r: x: t:localhost-8] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/collections params={action=LISTALIASES&wt=json&_=1743256848293} status=0 QTime=1
