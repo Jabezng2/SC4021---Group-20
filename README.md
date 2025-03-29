@@ -23,6 +23,7 @@
 
 4. Set up Apache Solr:
    - Download and install Solr 9.x from https://solr.apache.org/downloads.html
+   - Download the BINARY version
    - Start Solr: `bin/solr start` (Unix) or `bin\solr.cmd start` (Windows)
    - Create a core: `bin/solr create -c streaming_opinions` (Unix) or `bin\solr.cmd create -c streaming_opinions` (Windows)
    - Copy schema and configuration:
