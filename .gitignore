@@ -1,5 +1,7 @@
 # Project-Specific
 crawler/.env
+backend/solr-9.8.1/
+
 
 # OS-Specific
 .DS_Store
