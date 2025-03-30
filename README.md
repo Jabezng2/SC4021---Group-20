@@ -22,10 +22,16 @@
 - Download and install Solr 9.x from https://solr.apache.org/downloads.html
 - Download the BINARY Release
 - Navigate to your Solr 9.x root directory
-- Start Solr: `bin/solr start` (Unix) or `bin\solr.cmd start` (Windows)
+- Start Solr:
+```
+bin/solr start (Unix) or bin\solr.cmd start (Windows)
+```
 - Start Solr in standalone mode not cloud
 - Verify by navigating to http://localhost:8983/solr/
-- Create a core: `bin/solr create -c crypto_opinions` (Unix) or `bin\solr.cmd create -c crypto_opinions` (Windows)
+- Create a core:
+```
+bin/solr create -c crypto_opinions (Unix) or bin\solr.cmd create -c crypto_opinion(Windows)
+```
 - Copy schema and configuration:
   ```
   cp solr/managed-schema.xml <solr_installation>/server/solr/crypto_opinions/conf/
