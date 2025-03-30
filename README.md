@@ -49,3 +49,14 @@ cd solr
 python data_to_solr.py
 ```
 - Indexing is completed
+
+6. Start Flask Server
+- Navigate to root directory
+```
+python app.py
+```
+
+7. Postman API Testing (Example URL)
+```
+http://127.0.0.1:5000/api/search
+```

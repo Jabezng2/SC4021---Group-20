@@ -5,3 +5,6 @@ tqdm==4.65.0
 
 # Search & Indexing
 pysolr==3.9.0
+
+# Backend
+Flask==2.3.3
