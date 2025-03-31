@@ -56,19 +56,16 @@ python data_to_solr.py
 ```
 - Indexing is completed
 
-6. Start Flask Server
-- Navigate to root directory
+6. Bash Commands to Setup Things Faster
+- Ensure that you have CMake installed
+- Ensure that you installed solr-9.8.1 and that solr-9.8.1 folder is in the solr directory
+- In the root directory
 ```
-python app.py
+./dev.sh start_backend
 ```
-
-7. Postman API Testing (Example URL)
 ```
-http://127.0.0.1:5000/api/search
+./dev.sh start_frontend
 ```
-
-8. Start Next.js Client
-- Navigate to frontend directory
 ```
-npm run dev
+./dev.sh start_all
 ```
