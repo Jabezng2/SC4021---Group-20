@@ -33,19 +33,19 @@ bin/solr start (Unix) or bin\solr.cmd start (Windows)
 bin/solr create -c crypto_opinions (Unix) or bin\solr.cmd create -c crypto_opinion(Windows)
 ```
 - Copy schema and configuration:
-  ```
-  cp solr/managed-schema.xml <solr_installation>/server/solr/crypto_opinions/conf/
-  ```
+```
+cp solr/managed-schema.xml <solr_installation>/server/solr/crypto_opinions/conf/
+```
 - Restart Solr: `bin/solr restart` (Unix) or `bin\solr.cmd restart` (Windows)
 - Stop Existing Process:
-  ```
-  bin/solr stop
-  ```
-  OR
-  ```
-  lsof -i :<port number>
-  kill -9 <pid>
-  ```
+ ```
+ bin/solr stop
+ ```
+OR
+```
+lsof -i :<port number>
+kill -9 <pid>
+```
 
 5. Indexing
 - Ensure that Solr is running. Restart if needed.
