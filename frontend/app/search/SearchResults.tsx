@@ -21,6 +21,16 @@ type SearchResult = {
   date?: string;
 };
 
+const exchangeLogos: Record<string, { name: string; logo: string }> = {
+  binance: { name: "Binance", logo: "/logos/binance.png" },
+  coinbase: { name: "Coinbase", logo: "/logos/coinbase.png" },
+  kraken: { name: "Kraken", logo: "/logos/kraken.png" },
+  okx: { name: "OKX", logo: "/logos/okx.png" },
+  kucoin: { name: "Kucoin", logo: "/logos/kucoin.png" },
+  cryptocom: { name: "Crypto.com", logo: "/logos/crypto.png" },
+  bybit: { name: "Bybit.com", logo: "/logos/bybit.png" },
+};
+
 export default function SearchResults() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -145,12 +155,22 @@ export default function SearchResults() {
 
               <CardFooter className="flex flex-wrap gap-2 text-sm text-gray-600">
                 {doc.exchange?.length &&
-                  doc.exchange.map((ex) => (
-                    <Badge key={ex} variant="outline" className="bg-blue-100 text-blue-800">
-                      Exchange: {capitalize(ex)}
-                    </Badge>
-                  ))}
+                  doc.exchange.map((ex) => {
+                    const key = ex.toLowerCase().replace(/\W/g, "");
+                    const exchange = exchangeLogos[key];
+                    if (!exchange) return null;
 
+                    return (
+                      <Badge
+                        key={ex}
+                        variant="outline"
+                        className="flex items-center gap-1 bg-blue-100 text-blue-800"
+                      >
+                        <img src={exchange.logo} alt={exchange.name} className="w-4 h-4" />
+                        {exchange.name}
+                      </Badge>
+                    );
+                })}
                 {doc.source && (
                   <Badge variant="secondary" className="bg-purple-100 text-purple-800">
                     Source: {capitalize(doc.source)}
