@@ -59,6 +59,7 @@ python data_to_solr.py
 6. Bash Commands to Setup Things Faster
 - Ensure that you have CMake installed
 - Ensure that you installed solr-9.8.1 and that solr-9.8.1 folder is in the solr directory
+- Ensure that you have the virtual environment activated
 - In the root directory
 ```
 ./dev.sh start_backend

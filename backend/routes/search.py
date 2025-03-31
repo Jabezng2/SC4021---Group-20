@@ -30,7 +30,13 @@ def search():
     if content_type:
         fq.append(f'type:"{content_type}"')
     if exchange:
-        fq.append(f'exchange:"{exchange}"')
+        exchanges = exchange.split('+')
+        # Use OR logic in `q` so all docs match, and scoring boosts docs that match both
+        exchange_query = ' '.join([f'exchange:"{ex}"' for ex in exchanges])  # OR is implicit in q
+        if raw_query == '*:*':
+            solr_query = exchange_query
+        else:
+            solr_query = f'text:"{raw_query}" {exchange_query}'
     if sentiment:
         fq.append(f'sentiment:"{sentiment}"')
     if feature and feature != 'any':

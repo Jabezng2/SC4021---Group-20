@@ -73,7 +73,18 @@ for _, row in tqdm(df.iterrows(), total=len(df), desc="Preparing documents"):
         if field in row and pd.notna(row[field]):
             doc[field] = float(row[field])
 
-     # Add entities and keywords if available
+    # Add exchange, entities and keywords if 
+    if 'exchange' in row and pd.notna(row['exchange']):
+        try:
+            # Parse stringified list (like "['coinbase', 'binance']")
+            parsed = ast.literal_eval(row['exchange'])  # safer than eval()
+            if isinstance(parsed, list):
+                doc['exchange'] = parsed
+            else:
+                doc['exchange'] = [str(parsed)]
+        except Exception as e:
+            print(f"Error parsing exchange field: {row['exchange']}, Error: {e}")   
+
     if 'entities' in row and pd.notna(row['entities']):
         try:
             if isinstance(row['entities'], str):
