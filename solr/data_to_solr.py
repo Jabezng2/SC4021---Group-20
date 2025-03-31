@@ -73,7 +73,21 @@ for _, row in tqdm(df.iterrows(), total=len(df), desc="Preparing documents"):
         if field in row and pd.notna(row[field]):
             doc[field] = float(row[field])
 
-     # Add entities and keywords if available
+     # Add exchange, entities and keywords if 
+    if 'exchange' in row and pd.notna(row['exchange']):
+        try:
+            if isinstance(row['exchange'], str):
+                # Handle both JSON and string list formats
+                if row['exchange'].startswith('[') and row['exchange'].endswith(']'):
+                    try:
+                        doc['exchange'] = json.loads(row['exchange'])
+                    except:
+                        pass
+            else:
+                doc['exchange'] = row['exchange']
+        except Exception as e:
+            print(f"Error parsing exchange: {e}")
+
     if 'entities' in row and pd.notna(row['entities']):
         try:
             if isinstance(row['entities'], str):

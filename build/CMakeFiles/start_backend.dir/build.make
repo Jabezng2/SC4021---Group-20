@@ -71,7 +71,7 @@ CMakeFiles/start_backend:
 	cd /Users/jabezng/Desktop/SC4021---Group-20 && /opt/homebrew/bin/cmake -E echo ==\ Starting\ Backend\ ==
 	cd /Users/jabezng/Desktop/SC4021---Group-20 && /opt/homebrew/bin/cmake -E chdir solr/solr-9.8.1 cp ../../solr/managed-schema.xml server/solr/crypto_opinions/conf/
 	cd /Users/jabezng/Desktop/SC4021---Group-20 && /opt/homebrew/bin/cmake -E chdir solr/solr-9.8.1 bin/solr start
-	cd /Users/jabezng/Desktop/SC4021---Group-20 && /opt/homebrew/bin/cmake -E chdir solr python ../data_to_solr.py
+	cd /Users/jabezng/Desktop/SC4021---Group-20 && /opt/homebrew/bin/cmake -E chdir solr python data_to_solr.py
 	cd /Users/jabezng/Desktop/SC4021---Group-20 && /opt/homebrew/bin/cmake -E chdir . python app.py
 
 CMakeFiles/start_backend.dir/codegen:

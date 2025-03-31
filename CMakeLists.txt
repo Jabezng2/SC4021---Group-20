@@ -13,7 +13,7 @@ add_custom_target(start_backend
     COMMAND ${CMAKE_COMMAND} -E echo "== Starting Backend =="
     COMMAND ${CMAKE_COMMAND} -E chdir solr/solr-9.8.1 cp ../../solr/managed-schema.xml server/solr/crypto_opinions/conf/
     COMMAND ${CMAKE_COMMAND} -E chdir solr/solr-9.8.1 ${SOLR_START_CMD} start
-    COMMAND ${CMAKE_COMMAND} -E chdir solr python ../data_to_solr.py
+    COMMAND ${CMAKE_COMMAND} -E chdir solr python data_to_solr.py
     COMMAND ${CMAKE_COMMAND} -E chdir . python app.py
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Running Solr, ingesting data, and starting Flask app"
