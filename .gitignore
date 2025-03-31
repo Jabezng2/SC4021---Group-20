@@ -2,7 +2,8 @@
 crawler/.env
 solr/solr-9.8.1/
 
-
 # OS-Specific
 .DS_Store
 venv/
+
+**/__pycache__/
