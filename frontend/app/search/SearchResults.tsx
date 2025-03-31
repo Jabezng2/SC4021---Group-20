@@ -31,6 +31,8 @@ export default function SearchResults() {
   const [error, setError] = useState<string | null>(null);
   const [expandedMap, setExpandedMap] = useState<Record<string, boolean>>({});
 
+  const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+
   const toggleExpand = (id: string) => {
     setExpandedMap((prev) => ({
       ...prev,
@@ -144,13 +146,17 @@ export default function SearchResults() {
               <CardFooter className="flex flex-wrap gap-2 text-sm text-gray-600">
                 {doc.exchange?.length &&
                   doc.exchange.map((ex) => (
-                    <Badge key={ex} variant="outline">
-                      Exchange: {ex}
+                    <Badge key={ex} variant="outline" className="bg-blue-100 text-blue-800">
+                      Exchange: {capitalize(ex)}
                     </Badge>
-                ))}
+                  ))}
+
                 {doc.source && (
-                  <Badge variant="secondary">Source: {doc.source}</Badge>
+                  <Badge variant="secondary" className="bg-purple-100 text-purple-800">
+                    Source: {capitalize(doc.source)}
+                  </Badge>
                 )}
+
                 {doc.sentiment && (
                   <Badge
                     className={
@@ -161,21 +167,24 @@ export default function SearchResults() {
                         : "bg-gray-500 text-white"
                     }
                   >
-                    Sentiment: {doc.sentiment}
+                    Sentiment: {capitalize(doc.sentiment)}
                   </Badge>
                 )}
-                {doc.source?.startsWith("r/") &&
-                  typeof doc.reddit_score === "number" && (
-                    <Badge variant="outline">
-                      Reddit Score: {doc.reddit_score}
-                    </Badge>
-                  )}
-                {!doc.source?.startsWith("r/") &&
-                  typeof doc.rating === "number" && (
-                    <Badge variant="outline">Rating: {doc.rating}</Badge>
-                  )}
+
+                {doc.source?.startsWith("r/") && typeof doc.reddit_score === "number" && (
+                  <Badge className="bg-orange-500 text-white">
+                    Reddit Score: {doc.reddit_score}
+                  </Badge>
+                )}
+
+                {!doc.source?.startsWith("r/") && typeof doc.rating === "number" && (
+                  <Badge className="bg-yellow-500 text-white">
+                    Rating: {doc.rating}
+                  </Badge>
+                )}
+
                 {doc.date && (
-                  <Badge variant="secondary">
+                  <Badge variant="secondary" className="bg-gray-100 text-gray-700">
                     Date: {new Date(doc.date).toLocaleDateString()}
                   </Badge>
                 )}
