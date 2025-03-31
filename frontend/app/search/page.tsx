@@ -51,7 +51,7 @@ export default function SearchPage() {
         } else {
           setError(data.error || "Unknown error");
         }
-      } catch (err) {
+      } catch {
         setError("Failed to fetch data.");
       } finally {
         setLoading(false);
