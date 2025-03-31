@@ -11,7 +11,6 @@
     <field name="cleaned_text" type="text_general" indexed="true" stored="true"/>
     <field name="platform" type="string" indexed="true" stored="true"/>
     <field name="source" type="string" indexed="true" stored="true"/>
-    <field name="exchange" type="string" indexed="true" stored="true"/>
     <field name="date" type="pdate" indexed="true" stored="true"/>
     <field name="reddit_score" type="pint" indexed="true" stored="true"/>
     <field name="type" type="string" indexed="true" stored="true"/>
@@ -33,6 +32,7 @@
     <field name="performance" type="pfloat" indexed="true" stored="true"/>
 
     <!-- Enhanced fields for innovative indexing -->
+    <field name="exchange" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="entities" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="keywords" type="text_general" indexed="true" stored="true" multiValued="true"/>
 
