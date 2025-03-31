@@ -67,6 +67,3 @@ python data_to_solr.py
 ```
 ./dev.sh start_frontend
 ```
-```
-./dev.sh start_all
-```
