@@ -26,9 +26,3 @@ add_custom_target(start_frontend
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Running frontend dev server"
 )
-
-# Start both
-add_custom_target(start_all
-    DEPENDS start_backend start_frontend
-    COMMENT "Running both backend and frontend"
-)

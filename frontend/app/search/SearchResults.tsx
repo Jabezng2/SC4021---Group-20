@@ -13,7 +13,7 @@ type SearchResult = {
   id: string;
   text: string;
   platform?: string;
-  exchange?: string;
+  exchange?: string[];
   sentiment?: string;
   source?: string;
   reddit_score?: number;
@@ -142,11 +142,14 @@ export default function SearchResults() {
               </CardContent>
 
               <CardFooter className="flex flex-wrap gap-2 text-sm text-gray-600">
+                {doc.exchange?.length &&
+                  doc.exchange.map((ex) => (
+                    <Badge key={ex} variant="outline">
+                      Exchange: {ex}
+                    </Badge>
+                ))}
                 {doc.source && (
                   <Badge variant="secondary">Source: {doc.source}</Badge>
-                )}
-                {doc.exchange && (
-                  <Badge variant="outline">Exchange: {doc.exchange}</Badge>
                 )}
                 {doc.sentiment && (
                   <Badge
