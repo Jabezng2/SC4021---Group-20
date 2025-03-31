@@ -32,7 +32,7 @@
     <field name="performance" type="pfloat" indexed="true" stored="true"/>
 
     <!-- Enhanced fields for innovative indexing -->
-    <field name="exchange" type="text_general" indexed="true" stored="true" multiValued="true"/>
+    <field name="exchange" type="strings" indexed="true" stored="true" multiValued="true"/>
     <field name="entities" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="keywords" type="text_general" indexed="true" stored="true" multiValued="true"/>
 
