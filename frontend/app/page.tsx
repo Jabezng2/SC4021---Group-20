@@ -1,4 +1,3 @@
-// app/page.tsx
 "use client"
 
 import { Input } from "@/components/ui/input"
@@ -7,13 +6,13 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Tag } from "@/components/ui/tag"
 
-const suggestions = [
-  "Binance fees",
-  "Coinbase customer service",
-  "security issues",
-  "slow performance",
-  "UI complaints"
-]
+const suggestions: Record<string, string> = {
+  "Binance fees": "q=binance+fees&feature=fees",
+  "Coinbase customer service": "q=coinbase+customer+service&feature=user_interface",
+  "security issues": "q=security+issues&feature=security",
+  "slow performance": "q=slow+performance&feature=performance",
+  "User interface complaints": "q=user+interface+complaints&feature=user_interface"
+}
 
 export default function Home() {
   const [query, setQuery] = useState("")
@@ -21,8 +20,11 @@ export default function Home() {
 
   const handleSearch = () => {
     if (!query.trim()) return
-    const encodedQuery = encodeURIComponent(query.trim())
-    router.push(`/search?q=${encodedQuery}`)
+
+    const params = new URLSearchParams({
+      q: query.trim()
+    })
+    router.push(`/search?${params.toString()}`)
   }
 
   return (
@@ -41,23 +43,22 @@ export default function Home() {
         <Button
           className="h-12 text-base px-6 cursor-pointer"
           onClick={handleSearch}
-          >Search</Button>
+        >
+          Search
+        </Button>
       </div>
 
       {/* Suggested Queries */}
       <div className="mt-6 w-full max-w-xl">
         <h2 className="text-lg font-medium mb-2">Try:</h2>
         <div className="flex flex-wrap gap-2">
-          {suggestions.map((tag) => (
+          {Object.entries(suggestions).map(([label, queryString]) => (
             <Tag
-              key={tag}
-              onClick={() => {
-                setQuery(tag)
-                router.push(`/search?q=${encodeURIComponent(tag)}`)
-              }}
+              key={label}
+              onClick={() => router.push(`/search?${queryString}`)}
               className="cursor-pointer hover:opacity-80 transition"
             >
-              {tag}
+              {label}
             </Tag>
           ))}
         </div>
