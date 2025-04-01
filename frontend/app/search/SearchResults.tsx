@@ -3,11 +3,41 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Home } from "lucide-react";
+import { ChartColumnDecreasing } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ChartConfig, ChartContainer } from "@/components/ui/chart"
+import { Bar, BarChart, Cell, CartesianGrid, XAxis, YAxis, ResponsiveContainer} from "recharts"
+import { ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart"
+
+const chartConfig = {
+  sentiment: {
+    label: "Count",
+    color: ""
+  },
+  positive: {
+    label: "Positive",
+    color: "#22c55e"
+  },
+  negative: {
+    label: "Negative",
+    color: "#ef4444"
+  },
+  neutral: {
+    label: "Neutral",
+    color: "#6b7280"
+  }
+} satisfies ChartConfig
 
 type SearchResult = {
   id: string;
@@ -83,16 +113,32 @@ export default function SearchResults() {
     router.push(`/search?${params.toString()}`);
   };
 
+  const getSentimentData = () => {
+    const counts = [
+      { sentiment: "Positive", count: 0, fill: "#22c55e"  },
+      { sentiment: "Negative", count: 0, fill: "#ef4444" },
+      { sentiment: "Neutral", count: 0, fill: "#6b7280" },
+    ];
+  
+    results.forEach((r) => {
+      const s = r.sentiment?.toLowerCase();
+      if (s === "positive") counts[0].count += 1;
+      else if (s === "negative") counts[1].count += 1;
+      else counts[2].count += 1;
+    });
+  
+    return counts;
+  };  
+
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="flex items-center gap-2 mb-6">
         <Button
-          variant="ghost"
-          size="icon"
+          variant="outline"
           onClick={() => router.push("/")}
-          className="h-12 w-12"
+          className="h-12 w-12 p-0"
         >
-          <Home className="h-8 w-8 mx-auto my-auto" />
+          <Home className="h-12 w-12" />
         </Button>
         <Input
           value={searchInput}
@@ -107,10 +153,61 @@ export default function SearchResults() {
           Search
         </Button>
       </div>
-      <h3 className="text-2xl font-bold mb-6">
-        Search Results for:{" "}
-        <span className="text-blue-600">{decodeURIComponent(query)}</span>
-      </h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-2xl font-bold">
+          Search Results for:{" "}
+          <span className="text-blue-600">{decodeURIComponent(query)}</span>
+        </h3>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="h-10 px-4 py-2 text-sm flex items-center gap-2">
+              <ChartColumnDecreasing className="w-4 h-4" /> Plots
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="w-full max-w-md sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Sentiment Distribution</DialogTitle>
+            </DialogHeader>
+
+            <ChartContainer config={chartConfig} className="h-[280px] px-4 pt-2">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={getSentimentData()}
+                  margin={{ top: 10, right: 20, left: -10, bottom: 20 }}
+                  barCategoryGap={30}
+                >
+                  <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="sentiment"
+                    tickLine={false}
+                    axisLine={false}
+                    style={{ fontSize: "12px" }}
+                  />
+                  <YAxis
+                    width={30}
+                    allowDecimals={false}
+                    tickLine={false}
+                    axisLine={false}
+                    style={{ fontSize: "12px" }}
+                  />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <ChartLegend content={<ChartLegendContent />} />
+                  <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                    {getSentimentData().map((entry) => (
+                      <Cell
+                        key={entry.sentiment}
+                        fill={
+                          chartConfig[entry.sentiment.toLowerCase() as keyof typeof chartConfig].color
+                        }
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          </DialogContent>
+        </Dialog>
+      </div>
 
       {loading && (
         <div className="space-y-4">
@@ -164,7 +261,7 @@ export default function SearchResults() {
                       <Badge
                         key={ex}
                         variant="outline"
-                        className="flex items-center gap-1 bg-blue-100 text-blue-800"
+                        className="flex items-center gap-1 bg-blue-100 text-blue-800 font-bold"
                       >
                         <img src={exchange.logo} alt={exchange.name} className="w-4 h-4" />
                         {exchange.name}
@@ -172,7 +269,7 @@ export default function SearchResults() {
                     );
                 })}
                 {doc.source && (
-                  <Badge variant="secondary" className="bg-purple-100 text-purple-800">
+                  <Badge variant="secondary" className="bg-purple-100 text-purple-800 font-bold">
                     Source: {capitalize(doc.source)}
                   </Badge>
                 )}
@@ -181,10 +278,10 @@ export default function SearchResults() {
                   <Badge
                     className={
                       doc.sentiment === "positive"
-                        ? "bg-green-500 text-white"
+                        ? "bg-green-500 text-white font-bold"
                         : doc.sentiment === "negative"
-                        ? "bg-red-500 text-white"
-                        : "bg-gray-500 text-white"
+                        ? "bg-red-500 text-white font-bold"
+                        : "bg-gray-500 text-white font-bold"
                     }
                   >
                     Sentiment: {capitalize(doc.sentiment)}
@@ -192,19 +289,19 @@ export default function SearchResults() {
                 )}
 
                 {doc.source?.startsWith("r/") && typeof doc.reddit_score === "number" && (
-                  <Badge className="bg-orange-500 text-white">
+                  <Badge className="bg-orange-500 text-white font-bold">
                     Reddit Score: {doc.reddit_score}
                   </Badge>
                 )}
 
                 {!doc.source?.startsWith("r/") && typeof doc.rating === "number" && (
-                  <Badge className="bg-yellow-500 text-white">
+                  <Badge className="bg-yellow-500 text-white font-bold">
                     Rating: {doc.rating}
                   </Badge>
                 )}
 
                 {doc.date && (
-                  <Badge variant="secondary" className="bg-gray-100 text-gray-700">
+                  <Badge variant="secondary" className="bg-gray-100 text-gray-700 font-bold">
                     Date: {new Date(doc.date).toLocaleDateString()}
                   </Badge>
                 )}

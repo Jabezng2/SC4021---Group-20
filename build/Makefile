@@ -142,19 +142,6 @@ start_frontend/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/start_frontend.dir/build.make CMakeFiles/start_frontend.dir/build
 .PHONY : start_frontend/fast
 
-#=============================================================================
-# Target rules for targets named start_all
-
-# Build rule for target.
-start_all: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 start_all
-.PHONY : start_all
-
-# fast build rule for target.
-start_all/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/start_all.dir/build.make CMakeFiles/start_all.dir/build
-.PHONY : start_all/fast
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -163,7 +150,6 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... start_all"
 	@echo "... start_backend"
 	@echo "... start_frontend"
 .PHONY : help
