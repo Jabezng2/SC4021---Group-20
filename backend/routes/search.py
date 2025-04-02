@@ -11,9 +11,9 @@ def search():
     raw_query = request.args.get('q', '*:*')
     original_query = raw_query
 
-    platform = request.args.get('platform', '')
+    platform = request.args.get('platform', '') # not used
     source = request.args.get('source', '')
-    content_type = request.args.get('type', '')
+    type = request.args.get('type', '')
     exchange = request.args.get('exchange', '')
     sentiment = request.args.get('sentiment', '')
     feature = request.args.get('feature', '')
@@ -31,8 +31,8 @@ def search():
             fq.append('source:r/*')
         else:
             fq.append(f'source:"{source}"')
-    if content_type:
-        fq.append(f'type:"{content_type}"')
+    if type:
+        fq.append(f'type:"{type}"')
     if exchange:
         exchanges = exchange.split('+')
         # Use OR logic in `q` so all docs match, and scoring boosts docs that match both
@@ -48,11 +48,13 @@ def search():
     if start_date and end_date:
         fq.append(f'date:[{start_date}T00:00:00Z TO {end_date}T23:59:59Z]')
 
-    solr_query = raw_query
-    if raw_query != '*:*' and not raw_query.startswith('_text_:'):
+    if raw_query != '*:*' and not raw_query.startswith('text:'):
         solr_query = f'text:"{raw_query}"'
+    else:
+        solr_query = raw_query
 
     params = {
+        'defType': 'lucene', # edismax
         'q': solr_query,
         'fq': fq,
         'rows': rows,
@@ -115,7 +117,7 @@ def search():
             "content_types": content_types,
             "features": features,
             "selected_exchange": exchange,
-            "selected_type": content_type,
+            "selected_type": type,
             "selected_sentiment": sentiment,
             "selected_feature": feature,
             "start_date": start_date,

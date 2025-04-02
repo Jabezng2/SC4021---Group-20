@@ -30,11 +30,14 @@ import { CalendarIcon, SlidersHorizontal } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const suggestions: Record<string, string> = {
+  // Adding the &feature filters the fees feature by sentiment i.e above 0.5
+  // This means that some sentiments if value is sub 0.5 will not appear.
+  // This is a sentiment relevance filtering
   "Binance fees": "q=binance+fees&feature=fees",
-  "Coinbase customer service": "q=coinbase+customer+service&feature=user_interface",
+  "Coinbase customer service": "q=coinbase+customer+service&feature=customer_service", // Needs investigation (&feature)
   "security issues": "q=security+issues&feature=security",
-  "slow performance": "q=slow+performance&feature=performance",
-  "User interface complaints": "q=user+interface+complaints&feature=user_interface",
+  "degraded performance": "q=degraded+performance&feature=performance", // Needs investigation (&feature)
+  "Appealing user interface": "q=appealing+user+interface&feature=user_interface",
 }
 
 const exchangeOptions = [
