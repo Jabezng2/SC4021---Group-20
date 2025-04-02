@@ -60,7 +60,7 @@ python data_to_solr.py
 - Ensure that you have CMake installed
 - Ensure that you installed solr-9.8.1 and that solr-9.8.1 folder is in the solr directory
 - Ensure that you have the virtual environment activated
-- In the root directory
+- In the root directory run the dev.sh script to generate the build folder
 ```
 ./dev.sh start_backend
 ```
