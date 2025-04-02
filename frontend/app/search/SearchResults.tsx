@@ -16,15 +16,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart"
-import { Bar, BarChart, Cell, CartesianGrid, XAxis, YAxis, ResponsiveContainer} from "recharts"
-import { ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart"
+import { Bar, BarChart, Cell, CartesianGrid, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Legend, Line, LineChart} from "recharts"
+import { ChartTooltip, ChartTooltipContent, ChartConfig, ChartContainer } from "@/components/ui/chart"
 
-const chartConfig = {
-  sentiment: {
-    label: "Count",
-    color: ""
-  },
+const chartConfigSentiment = {
   positive: {
     label: "Positive",
     color: "#22c55e"
@@ -38,6 +33,35 @@ const chartConfig = {
     color: "#6b7280"
   }
 } satisfies ChartConfig
+
+const chartConfigSource = {
+  reddit: {
+    label: "Reddit",
+    color: "#ff4500"
+  },
+  trustpilot: {
+    label: "TrustPilot",
+    color: "#007f4e"
+  },
+  appstore: {
+    label: "App Store",
+    color: "#0d96f6"
+  },
+  playstore: {
+    label: "Play Store",
+    color: "#34a853"
+  },
+} satisfies ChartConfig
+
+const chartConfigExchange = {
+  binance: { label: "Binance", color: "#f0b90b" },
+  coinbase: { label: "Coinbase", color: "#1652f0" },
+  kraken: { label: "Kraken", color: "#5841d8" },
+  okx: { label: "OKX", color: "#000000" },
+  kucoin: { label: "Kucoin", color: "#28c0b1" },
+  cryptocom: { label: "Crypto.com", color: "#103f68" },
+  bybit: { label: "Bybit", color: "#f2a900" }
+} satisfies ChartConfig;
 
 type SearchResult = {
   id: string;
@@ -115,7 +139,7 @@ export default function SearchResults() {
 
   const getSentimentData = () => {
     const counts = [
-      { sentiment: "Positive", count: 0, fill: "#22c55e"  },
+      { sentiment: "Positive", count: 0, fill: "#22c55e" },
       { sentiment: "Negative", count: 0, fill: "#ef4444" },
       { sentiment: "Neutral", count: 0, fill: "#6b7280" },
     ];
@@ -124,11 +148,74 @@ export default function SearchResults() {
       const s = r.sentiment?.toLowerCase();
       if (s === "positive") counts[0].count += 1;
       else if (s === "negative") counts[1].count += 1;
-      else counts[2].count += 1;
+      else if (s === "neutral") counts[2].count += 1;
     });
   
-    return counts;
-  };  
+    // Filter out 0-count entries
+    return counts.filter((entry) => entry.count > 0);
+  };
+
+  const getSourceData = () => {
+    const counts = [
+      { source: "Reddit", count: 0, fill: "#ff4500" },       // Reddit
+      { source: "TrustPilot", count: 0, fill: "#007f4e" },   // TrustPilot
+      { source: "App Store", count: 0, fill: "#0d96f6" },    // App Store
+      { source: "Play Store", count: 0, fill: "#34a853" },   // Play Store
+    ];
+  
+    results.forEach((r) => {
+      const s = r.source?.toLowerCase() || "";
+  
+      if (s.startsWith("r/")) counts[0].count += 1;
+      else if (s.includes("trustpilot")) counts[1].count += 1;
+      else if (s.includes("app store")) counts[2].count += 1;
+      else if (s.includes("play store")) counts[3].count += 1;
+    });
+  
+    return counts.filter((entry) => entry.count > 0);
+  };
+
+  const getExchangeData = () => {
+    const counts: Record<string, { exchange: string; count: number; fill: string }> = {};
+  
+    // Initialize counts from config
+    Object.keys(chartConfigExchange).forEach((key) => {
+      counts[key] = {
+        exchange: chartConfigExchange[key as keyof typeof chartConfigExchange].label,
+        count: 0,
+        fill: chartConfigExchange[key as keyof typeof chartConfigExchange].color
+      };
+    });
+  
+    // Aggregate counts
+    results.forEach((r) => {
+      r.exchange?.forEach((ex) => {
+        const key = ex.toLowerCase().replace(/\W/g, ""); // Normalize
+        if (counts[key]) {
+          counts[key].count += 1;
+        }
+      });
+    });
+  
+    return Object.values(counts).filter((entry) => entry.count > 0);
+  };
+
+  const getTimeSeriesDataByYear = () => {
+    const counts: Record<string, number> = {};
+  
+    results.forEach((r) => {
+      if (!r.date) return;
+  
+      const year = new Date(r.date).getFullYear().toString();
+  
+      counts[year] = (counts[year] || 0) + 1;
+    });
+  
+    // Convert to array sorted by year
+    return Object.entries(counts)
+      .map(([year, count]) => ({ year, count }))
+      .sort((a, b) => parseInt(a.year) - parseInt(b.year));
+  };    
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -164,47 +251,147 @@ export default function SearchResults() {
               <ChartColumnDecreasing className="w-4 h-4" /> Plots
             </Button>
           </DialogTrigger>
-          <DialogContent className="w-full max-w-md sm:max-w-lg">
-            <DialogHeader>
-              <DialogTitle>Sentiment Distribution</DialogTitle>
-            </DialogHeader>
-
-            <ChartContainer config={chartConfig} className="h-[280px] px-4 pt-2">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={getSentimentData()}
-                  margin={{ top: 10, right: 20, left: -10, bottom: 20 }}
-                  barCategoryGap={30}
+          <DialogContent className="sm:max-w-[650px] h-[650px]">
+            <DialogHeader><DialogTitle>Plots</DialogTitle></DialogHeader>
+            <div className="grid sm:grid-cols-2 gap-x-2 gap-y-1 h-[550px] overflow-y-auto">
+              {/* Sentiment Chart */}
+              {getSentimentData().length > 0 ? (
+                <ChartContainer
+                  config={chartConfigSentiment}
+                  className="h-[250px] min-w-0 w-full p-2 bg-white border border-gray-200 rounded-lg"
                 >
-                  <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                  <XAxis
-                    dataKey="sentiment"
-                    tickLine={false}
-                    axisLine={false}
-                    style={{ fontSize: "12px" }}
-                  />
-                  <YAxis
-                    width={30}
-                    allowDecimals={false}
-                    tickLine={false}
-                    axisLine={false}
-                    style={{ fontSize: "12px" }}
-                  />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <ChartLegend content={<ChartLegendContent />} />
-                  <Bar dataKey="count" radius={[4, 4, 0, 0]}>
-                    {getSentimentData().map((entry) => (
-                      <Cell
-                        key={entry.sentiment}
-                        fill={
-                          chartConfig[entry.sentiment.toLowerCase() as keyof typeof chartConfig].color
-                        }
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      accessibilityLayer
+                      data={getSentimentData()}
+                      margin={{ top: 10, right: 20, left: 0, bottom: 20 }}
+                      barCategoryGap={30}
+                    >
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                      <XAxis dataKey="sentiment" tickLine={false} axisLine={false} style={{ fontSize: "12px" }} />
+                      <YAxis width={30} allowDecimals={false} tickLine={false} axisLine={false} style={{ fontSize: "12px" }} />                
+                      <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                        {getSentimentData().map((entry) => (
+                          <Cell
+                            key={entry.sentiment}
+                            fill={chartConfigSentiment[entry.sentiment.toLowerCase() as keyof typeof chartConfigSentiment].color}
+                          />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              ) : (
+                <p className="text-gray-500 text-sm">No sentiment data to display.</p>
+              )}
+
+              {/* Source Chart */}
+              {getSourceData().length > 0 ? (
+                <ChartContainer
+                  config={chartConfigSource}
+                  className="h-[250px] min-w-0 w-full p-2 bg-white border border-gray-200 rounded-lg"
+                >
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Legend
+                        iconType="square"
+                        layout="horizontal"
+                        verticalAlign="bottom"
+                        align="center"
                       />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+                      <Pie
+                        data={getSourceData()}
+                        dataKey="count"
+                        nameKey="source"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius="80%"
+                        label
+                      >
+                        {getSourceData().map((entry) => (
+                          <Cell key={entry.source} fill={entry.fill} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              ) : (
+                <p className="text-gray-500 text-sm">No source data to display.</p>
+              )}
+
+              {getExchangeData().length > 0 ? (
+                <ChartContainer
+                  config={chartConfigExchange}
+                  className="h-[250px] min-w-0 w-full p-2 bg-white border border-gray-200 rounded-lg"
+                >
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Legend iconType="square" layout="horizontal" verticalAlign="bottom" align="center" />
+                      <Pie
+                        data={getExchangeData()}
+                        dataKey="count"
+                        nameKey="exchange"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius="80%"
+                        label
+                      >
+                        {getExchangeData().map((entry) => (
+                          <Cell key={entry.exchange} fill={entry.fill} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              ) : (
+                <p className="text-gray-500 text-sm">No exchange data to display.</p>
+              )}
+
+              {getTimeSeriesDataByYear().length > 0 ? (
+                <ChartContainer
+                config={{
+                  count: { label: "Opinions", color: "#3b82f6" },
+                }}
+                className="h-[250px] min-w-0 w-full p-2 bg-white border border-gray-200 rounded-lg"
+              >
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={getTimeSeriesDataByYear()}
+                    margin={{ top: 10, right: 20, left: 0, bottom: 20 }}
+                  >
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis
+                      dataKey="year"
+                      tickLine={false}
+                      axisLine={false}
+                      fontSize={12}
+                    />
+                    <YAxis
+                      width={30}
+                      allowDecimals={false}
+                      tickLine={false}
+                      axisLine={false}
+                      fontSize={12}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="count"
+                      stroke="#3b82f6"
+                      strokeWidth={2}
+                      dot={{ r: 3 }}
+                      activeDot={{ r: 5 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </ChartContainer>                            
+              ) : (
+                <p className="text-gray-500 text-sm">No timeline data to display.</p>
+              )}
+            </div>
           </DialogContent>
         </Dialog>
       </div>

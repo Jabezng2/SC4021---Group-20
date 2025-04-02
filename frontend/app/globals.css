@@ -138,3 +138,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+.recharts-legend-item .recharts-surface {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 2px !important; /* Adjust as needed for rounding */
+  margin-bottom: 1px !important;
+}
+
