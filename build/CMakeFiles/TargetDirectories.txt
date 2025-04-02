@@ -1,4 +1,0 @@
-/Users/jabezng/Desktop/SC4021---Group-20/build/CMakeFiles/start_backend.dir
-/Users/jabezng/Desktop/SC4021---Group-20/build/CMakeFiles/start_frontend.dir
-/Users/jabezng/Desktop/SC4021---Group-20/build/CMakeFiles/edit_cache.dir
-/Users/jabezng/Desktop/SC4021---Group-20/build/CMakeFiles/rebuild_cache.dir
