@@ -353,7 +353,7 @@ export default function SearchResults() {
               {getTimeSeriesDataByYear().length > 0 ? (
                 <ChartContainer
                 config={{
-                  count: { label: "Opinions", color: "#3b82f6" },
+                  count: { label: "count", color: "#3b82f6" },
                 }}
                 className="h-[250px] min-w-0 w-full p-2 bg-white border border-gray-200 rounded-lg"
               >
