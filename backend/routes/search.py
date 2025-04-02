@@ -26,7 +26,11 @@ def search():
     if platform:
         fq.append(f'platform:"{platform}"')
     if source:
-        fq.append(f'source:"{source}"')
+        if source.lower() == "reddit":
+            # Match all sources that start with "r/"
+            fq.append('source:r/*')
+        else:
+            fq.append(f'source:"{source}"')
     if content_type:
         fq.append(f'type:"{content_type}"')
     if exchange:
