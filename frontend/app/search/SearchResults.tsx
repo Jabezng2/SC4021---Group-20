@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Home } from "lucide-react";
+import { Home, ThumbsUpIcon, ThumbsDownIcon, CircleCheck } from "lucide-react";
 import { ChartColumnDecreasing } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -95,6 +95,23 @@ export default function SearchResults() {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [expandedMap, setExpandedMap] = useState<Record<string, boolean>>({});
+  const [feedbackGiven, setFeedbackGiven] = useState<Record<string, boolean>>({});
+
+  const handleFeedback = async (docId: string, value: number) => {
+    try {
+      await fetch("http://127.0.0.1:5000/api/feedback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ doc_id: docId, value }),
+      });
+
+      setFeedbackGiven((prev) => ({ ...prev, [docId]: true }));
+    } catch (err) {
+      console.error("Feedback error:", err);
+    }
+  };
 
   const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -514,6 +531,40 @@ export default function SearchResults() {
                   </Badge>
                 )}
               </CardFooter>
+              <div className="flex items-center gap-2 px-4 py-2 border-t mt-2">
+                {!feedbackGiven[doc.id] ? (
+                  <>
+                    <span className="text-sm font-medium">Was this document relevant to your query ?</span>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      disabled={feedbackGiven[doc.id]}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleFeedback(doc.id, 1);
+                      }}
+                    >
+                      <ThumbsUpIcon className="h-12 w-12" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      disabled={feedbackGiven[doc.id]}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleFeedback(doc.id, -1);
+                      }}
+                    >
+                      <ThumbsDownIcon className="h-12 w-12" />
+                    </Button>
+                  </>
+                ): (
+                  <span className="text-sm font-medium flex items-center gap-2 text-green-600">
+                    <CircleCheck className="h-5 w-5" />
+                    Thank you for your feedback!
+                  </span>
+                )}
+              </div>
             </Card>
           );
         })}
