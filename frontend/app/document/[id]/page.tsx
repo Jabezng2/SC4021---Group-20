@@ -58,6 +58,7 @@
 
     const truncateText = (text: string, expanded: boolean) =>
         expanded || text.length <= 500 ? text : text.slice(0, 500) + "...";
+    const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
     return (
         <div className="max-w-4xl mx-auto p-6 space-y-4">
@@ -89,7 +90,7 @@
                         : "bg-gray-500"
                     }`}
                 >
-                    Sentiment: {doc.sentiment}
+                    Sentiment: {capitalize(doc.sentiment)}
                 </Badge>
                 )}
 

@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
+from .feedback_store import load_feedback_scores
 import logging
 import sys
 
@@ -10,15 +11,18 @@ def create_app():
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s [%(levelname)s] %(message)s',
-        handlers=[
-            logging.StreamHandler(sys.stdout)
-        ]
+        handlers=[logging.StreamHandler(sys.stdout)]
     )
+
+    # Load feedback memory once at startup
+    load_feedback_scores()
 
     from .routes.search import search_bp
     from .routes.document import document_bp
+    from .routes.feedback import feedback_bp
 
     app.register_blueprint(search_bp, url_prefix='/api')
     app.register_blueprint(document_bp, url_prefix='/api')
+    app.register_blueprint(feedback_bp, url_prefix='/api')
 
     return app
