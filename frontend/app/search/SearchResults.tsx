@@ -73,6 +73,7 @@ type SearchResult = {
   reddit_score?: number;
   rating?: number;
   date?: string;
+  type: string;
 };
 
 const exchangeLogos: Record<string, { name: string; logo: string }> = {
@@ -223,7 +224,7 @@ export default function SearchResults() {
         <Button
           variant="outline"
           onClick={() => router.push("/")}
-          className="h-12 w-12 p-0"
+          className="h-12 w-12 p-0 cursor-pointer"
         >
           <Home className="h-12 w-12" />
         </Button>
@@ -247,7 +248,7 @@ export default function SearchResults() {
         </h3>
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="h-10 px-4 py-2 text-sm flex items-center gap-2">
+            <Button className="h-10 px-4 py-2 text-sm flex items-center gap-2 cursor-pointer">
               <ChartColumnDecreasing className="w-4 h-4" /> Plots
             </Button>
           </DialogTrigger>
@@ -415,7 +416,11 @@ export default function SearchResults() {
           const isExpanded = expandedMap[doc.id] ?? false;
 
           return (
-            <Card key={doc.id} className="bg-white shadow-sm border rounded-md">
+            <Card
+              key={doc.id}
+              className="bg-white shadow-sm border rounded-md cursor-pointer"
+              onClick={() => router.push(`/document/${doc.id}`)}
+            >
               <CardContent>
                 <div className="flex flex-col gap-1">
                   <span
@@ -428,7 +433,10 @@ export default function SearchResults() {
                   {doc.text[0].length > 300 && (
                     <Button
                       variant="link"
-                      onClick={() => toggleExpand(doc.id)}
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent click from bubbling up to Card
+                        toggleExpand(doc.id);
+                      }}
                       className="p-0 h-auto text-sm font-semibold text-blue-600 self-start hover:underline underline-offset-2"
                     >
                       {isExpanded ? "Show less" : "Show more"}
@@ -476,9 +484,22 @@ export default function SearchResults() {
                 )}
 
                 {doc.source?.startsWith("r/") && typeof doc.reddit_score === "number" && (
-                  <Badge className="bg-orange-500 text-white font-bold">
-                    Reddit Score: {doc.reddit_score}
-                  </Badge>
+                  <>
+                    <Badge className="bg-orange-500 text-white font-bold">
+                      Reddit Score: {doc.reddit_score}
+                    </Badge>
+                    <Badge
+                      className={`text-white font-bold ${
+                        doc.type === "submission"
+                          ? "bg-blue-600"
+                          : doc.type === "comment"
+                          ? "bg-gray-600"
+                          : "bg-orange-500"
+                      }`}
+                    >
+                      Type: Reddit {capitalize(doc.type)}
+                    </Badge>
+                  </>
                 )}
 
                 {!doc.source?.startsWith("r/") && typeof doc.rating === "number" && (
