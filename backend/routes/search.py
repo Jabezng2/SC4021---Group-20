@@ -67,7 +67,7 @@ def search():
         'facet.range.end': 'NOW',
         'facet.range.gap': '+1MONTH',
         'sort': 'reddit_score desc, rating desc',
-        'fl': 'id,text,cleaned_text,platform,source,exchange,date,reddit_score,rating,word_count,sentiment,sentiment_score,fees,user_interface,customer_service,security,coin_listings,performance',
+        'fl': 'id,text,cleaned_text,platform,source,type,exchange,date,reddit_score,rating,word_count,sentiment,sentiment_score,fees,user_interface,customer_service,security,coin_listings,performance',
         'wt': 'json',
     }
 

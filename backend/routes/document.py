@@ -75,7 +75,7 @@ def view_document(doc_id):
 
             return jsonify({
                 "doc": doc,
-                # "related_docs": related_docs,
+                "related_docs": related_docs,
                 "keywords": keywords,
                 "entities": entities
             })

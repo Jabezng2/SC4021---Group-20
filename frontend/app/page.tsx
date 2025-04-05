@@ -89,7 +89,7 @@ export default function Home() {
           placeholder="Search for exchanges, coins, or sentiment..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="flex-1 h-12 text-base"
+          className="flex-1 h-12 text-base cursor-text"
           onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
 
