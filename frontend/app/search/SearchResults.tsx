@@ -232,7 +232,7 @@ export default function SearchResults() {
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           placeholder="Search something..."
-          className="flex-1 h-12 text-base"
+          className="flex-1 h-12 text-base cursor-text"
         />
         <Button
           onClick={handleSearch}
