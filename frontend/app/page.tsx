@@ -193,7 +193,11 @@ export default function Home() {
             </div>
             <div>
               <DropdownMenuLabel>Reddit Type</DropdownMenuLabel>
-              <Select value={type} onValueChange={setType}>
+              <Select
+                value={type}
+                onValueChange={setType}
+                disabled={source !== "" && source !== "reddit"}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Choose type" />
                 </SelectTrigger>
