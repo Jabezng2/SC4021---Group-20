@@ -65,7 +65,7 @@
         <Card>
             <CardHeader>
             <CardTitle className="text-2xl">
-                Document ID: {doc.id} {doc.type && `(${doc.type})`}
+                Document ID: {doc.id} {doc.type && `(Reddit ${capitalize(doc.type)})`}
             </CardTitle>
             <div className="flex flex-wrap gap-2 mt-2 text-sm">
                 {doc.source?.startsWith("r/") && (
