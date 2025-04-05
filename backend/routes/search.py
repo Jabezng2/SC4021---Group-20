@@ -53,11 +53,14 @@ def search():
     else:
         solr_query = raw_query
 
+    # Fetch more docs to enable reranking
+    solr_rows = 50 if enable_feedback_rerank else rows
+
     params = {
         'defType': 'lucene',
         'q': solr_query,
         'fq': fq,
-        'rows': rows,
+        'rows': solr_rows,
         'start': start,
         'facet': 'true',
         'facet.field': ['platform', 'sentiment', 'type'],
@@ -71,6 +74,11 @@ def search():
         'wt': 'json',
     }
 
+    def get_normalized_score(doc, feedback_score=0):
+        normalized_reddit = doc.get('reddit_score', 0) / 100.0  # scale reddit to ~0–40
+        normalized_rating = doc.get('rating', 0)  # 0–5
+        return feedback_score * 10 + normalized_reddit + normalized_rating
+
     try:
         print(f"Solr Query: {solr_query}")
         print(f"Filter Queries: {fq}")
@@ -83,9 +91,10 @@ def search():
             doc_ids = [doc['id'] for doc in docs]
             feedback_map = bulk_feedback_scores(doc_ids)
             docs.sort(
-                key=lambda d: (feedback_map.get(d['id'], 0), d.get('reddit_score', 0)),
+                key=lambda d: get_normalized_score(d, feedback_map.get(d['id'], 0)),
                 reverse=True
             )
+            docs = docs[:rows]  # only return top N after rerank
 
         if start >= num_found:
             start = (num_found // rows) * rows
@@ -96,7 +105,8 @@ def search():
 
         exchanges = get_facet_values('exchange')
         content_types = get_facet_values('type')
-
+        
+        '''
         features = [
             {'id': 'fees', 'name': 'Exchange Fees'},
             {'id': 'user_interface', 'name': 'User Interface'},
@@ -106,6 +116,7 @@ def search():
             {'id': 'performance', 'name': 'Performance'},
             {'id': 'any', 'name': 'Any Feature'}
         ]
+        '''
 
         return jsonify({
             "query": original_query,
@@ -116,7 +127,7 @@ def search():
             "rows": rows,
             "exchanges": exchanges,
             "content_types": content_types,
-            "features": features,
+            # "features": features,
             "selected_exchange": exchange,
             "selected_type": type,
             "selected_sentiment": sentiment,
