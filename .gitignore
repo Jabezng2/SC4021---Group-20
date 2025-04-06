@@ -5,6 +5,7 @@ solr/solr-9.8.1/
 # OS-Specific
 .DS_Store
 venv/
+venv1/
 
 **/__pycache__/
 /build/

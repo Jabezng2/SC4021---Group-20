@@ -5,7 +5,7 @@ import sys
 
 def create_app():
     app = Flask(__name__)
-    CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000"]}})
+    CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000", "http://172.17.160.1:3000"]}})
 
     logging.basicConfig(
         level=logging.INFO,
