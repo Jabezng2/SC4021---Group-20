@@ -101,9 +101,9 @@
                 </Badge>
                 )}
 
-                {(doc as { parent_id?: string }).parent_id && (
+                {doc.parent_id && (
                 <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
-                    Parent ID: {(doc as any).parent_id}
+                    Parent ID: {doc.parent_id}
                 </Badge>
                 )}
             </div>
