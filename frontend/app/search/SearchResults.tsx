@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Home, ThumbsUpIcon, ThumbsDownIcon, CircleCheck } from "lucide-react";
 import { ChartColumnDecreasing } from "lucide-react";
@@ -143,7 +144,7 @@ export default function SearchResults() {
     };
 
     fetchResults();
-  }, [query]);
+  }, [query, searchParams]);
 
   const handleSearch = () => {
     if (!searchInput.trim()) return;
@@ -475,7 +476,13 @@ export default function SearchResults() {
                         variant="outline"
                         className="flex items-center gap-1 bg-blue-100 text-blue-800 font-bold"
                       >
-                        <img src={exchange.logo} alt={exchange.name} className="w-4 h-4" />
+                        <Image
+                          src={exchange.logo}
+                          alt={exchange.name}
+                          width={16}
+                          height={16}
+                          className="w-4 h-4"
+                        />
                         {exchange.name}
                       </Badge>
                     );

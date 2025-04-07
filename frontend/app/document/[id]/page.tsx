@@ -37,7 +37,7 @@
             const res = await fetch(`http://127.0.0.1:5000/api/document/${id}`);
             const data = await res.json();
             setDoc(data.doc);
-        } catch (err) {
+        } catch {
             setError("Failed to fetch document.");
         }
         };
@@ -101,7 +101,7 @@
                 </Badge>
                 )}
 
-                {(doc as any).parent_id && (
+                {(doc as { parent_id?: string }).parent_id && (
                 <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
                     Parent ID: {(doc as any).parent_id}
                 </Badge>
