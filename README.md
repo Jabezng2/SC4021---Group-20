@@ -30,16 +30,17 @@ bin/solr start (Unix) or bin\solr.cmd start (Windows)
 - Verify by navigating to http://localhost:8983/solr/
 - Create a core:
 ```
-bin/solr create -c crypto_opinions (Unix) or bin\solr.cmd create -c crypto_opinion(Windows)
+bin/solr create -c crypto_opinions (Unix) or bin\solr.cmd create -c crypto_opinions(Windows)
 ```
 - Copy schema and configuration:
 ```
-cp solr/managed-schema.xml <solr_installation>/server/solr/crypto_opinions/conf/
+cp solr/managed-schema.xml <solr_installation>/server/solr/crypto_opinions/conf/ (can skip, has already been copied and configured)
 ```
-- Restart Solr: `bin/solr restart` (Unix) or `bin\solr.cmd restart` (Windows)
+- Restart Solr: `bin/solr restart` (Unix) or `bin\solr.cmd restart` (Windows) / bin\solr.cmd restart -p 8983
+
 - Stop Existing Process:
  ```
- bin/solr stop
+ bin/solr stop / bin/solr stop -all
  ```
 OR
 ```
