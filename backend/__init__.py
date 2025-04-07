@@ -6,7 +6,7 @@ import sys
 
 def create_app():
     app = Flask(__name__)
-    CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000"]}})
+    CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000", "https://cryptopinions.vercel.app"]}})
 
     logging.basicConfig(
         level=logging.INFO,
