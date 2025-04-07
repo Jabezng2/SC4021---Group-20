@@ -7,5 +7,6 @@ solr/solr-9.8.1/
 venv/
 venv1/
 
-**/__pycache__/
+__pycache__/
+*.pyc
 /build/

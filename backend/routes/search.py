@@ -1,6 +1,7 @@
 import logging
 from flask import Blueprint, request, jsonify
 from backend.solr_client import query_solr, get_facet_values
+from backend.feedback_store import bulk_feedback_scores
 
 search_bp = Blueprint('search', __name__)
 
@@ -11,7 +12,7 @@ def search():
     raw_query = request.args.get('q', '*:*')
     original_query = raw_query
 
-    platform = request.args.get('platform', '') # not used
+    platform = request.args.get('platform', '')
     source = request.args.get('source', '')
     type = request.args.get('type', '')
     exchange = request.args.get('exchange', '')
@@ -21,13 +22,13 @@ def search():
     end_date = request.args.get('end_date', '')
     rows = int(request.args.get('rows', 10))
     start = int(request.args.get('start', 0))
+    enable_feedback_rerank = request.args.get('rerank', 'true').lower() == 'true'
 
     fq = []
     if platform:
         fq.append(f'platform:"{platform}"')
     if source:
         if source.lower() == "reddit":
-            # Match all sources that start with "r/"
             fq.append('source:r/*')
         else:
             fq.append(f'source:"{source}"')
@@ -35,8 +36,7 @@ def search():
         fq.append(f'type:"{type}"')
     if exchange:
         exchanges = exchange.split('+')
-        # Use OR logic in `q` so all docs match, and scoring boosts docs that match both
-        exchange_query = ' '.join([f'exchange:"{ex}"' for ex in exchanges])  # OR is implicit in q
+        exchange_query = ' '.join([f'exchange:"{ex}"' for ex in exchanges])
         if raw_query == '*:*':
             solr_query = exchange_query
         else:
@@ -54,7 +54,7 @@ def search():
         solr_query = raw_query
 
     params = {
-        'defType': 'lucene', # edismax
+        'defType': 'lucene',
         'q': solr_query,
         'fq': fq,
         'rows': rows,
@@ -76,23 +76,24 @@ def search():
         print(f"Filter Queries: {fq}")
 
         results = query_solr(params)
-
-        # Get the actual number of results
+        docs = results['response'].get('docs', [])
         num_found = results['response'].get('numFound', 0)
 
-        # Handle pagination edge cases
-        if num_found == 0:
-            pass
-        elif start >= num_found:
-            # Start is beyond available results, go to last page
-            start = (num_found // rows) * rows
-            if start == num_found:  # Handle exact division case
-                start = max(0, start - rows)
+        if num_found > 0 and enable_feedback_rerank:
+            doc_ids = [doc['id'] for doc in docs]
+            feedback_map = bulk_feedback_scores(doc_ids)
+            docs.sort(
+                key=lambda d: (feedback_map.get(d['id'], 0), d.get('reddit_score', 0)),
+                reverse=True
+            )
 
-            # Re-fetch with corrected pagination
+        if start >= num_found:
+            start = (num_found // rows) * rows
+            if start == num_found:
+                start = max(0, start - rows)
             params['start'] = start
             results = query_solr(params)
-        
+
         exchanges = get_facet_values('exchange')
         content_types = get_facet_values('type')
 
@@ -109,7 +110,7 @@ def search():
         return jsonify({
             "query": original_query,
             "solr_query": solr_query,
-            "results": results['response']['docs'],
+            "results": docs,
             "num_found": num_found,
             "start": start,
             "rows": rows,
