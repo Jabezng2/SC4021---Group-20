@@ -20,6 +20,7 @@
     type?: string;
     keywords?: string[];
     entities?: string[];
+    parent_id?: string;
     };
 
     export default function DocumentDetailPage() {
@@ -97,6 +98,12 @@
                 {doc.date && (
                 <Badge variant="outline" className="text-gray-700">
                     Date: {new Date(doc.date).toLocaleDateString()}
+                </Badge>
+                )}
+
+                {(doc as any).parent_id && (
+                <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
+                    Parent ID: {(doc as any).parent_id}
                 </Badge>
                 )}
             </div>
