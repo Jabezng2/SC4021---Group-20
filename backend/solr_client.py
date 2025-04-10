@@ -49,6 +49,13 @@ def get_facet_values(field_name):
         return []  # Return empty list on error
 
 def query_solr(params):
-    response = requests.get(f"{SOLR_URL}/select", params=params)
-    response.raise_for_status()
-    return response.json()
+    # Log the params being used in the Solr query
+    logger.info(f"Querying Solr with params: {params}")
+    
+    try:
+        response = requests.get(f"{SOLR_URL}/select", params=params)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        logger.error(f"Error during Solr query: {e}")
+        return None
