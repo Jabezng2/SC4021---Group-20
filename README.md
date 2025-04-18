@@ -1,6 +1,9 @@
 # Cryptocurrency Exchange Opinion Search Engine
 
-## 📂 Project Structure
+## Project Overview
+The objective of this assignment is to design and develop an opinion search engine that performs sentiment analysis on public opinions related to cryptocurrency exchanges. This information retrieval system aims to uncover key user concerns and preferences—such as transaction fees, platform reliability, and overall user experience—by analyzing discussions from online platforms. Insights gathered can help existing and future crypto exchanges better understand user expectations and improve their services. The project will focus on seven major exchanges: Binance, Coinbase, Kraken, OKX, KuCoin, Crypto.com, and Bybit.
+
+## Project Structure
 ```
 📁 SC4021---Group-20
  ├── 📂 backend            # Backend API Endpoints and Logic
