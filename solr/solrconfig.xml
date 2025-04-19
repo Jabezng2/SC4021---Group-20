@@ -695,6 +695,21 @@
     </arr>
   </requestHandler>
 
+  <requestHandler name="/suggest" class="solr.SearchHandler" startup="lazy">
+    <lst name="defaults">
+      <str name="suggest">true</str>
+      <str name="suggest.count">10</str>
+      <str name="suggest.dictionary">mySuggester</str>
+      <!-- <str name="suggest.dictionary">suggest_words</str>  -->
+      <str name="suggest.onlyMorePopular">true</str>
+      <str name="suggest.collate">true</str>
+      <str name="suggest.collateExtendedResults">true</str>
+    </lst>
+    <arr name="components">
+      <str>suggest</str>
+    </arr>
+  </requestHandler>
+
   <!-- Highlighting Component
 
        https://solr.apache.org/guide/solr/latest/query-guide/highlighting.html

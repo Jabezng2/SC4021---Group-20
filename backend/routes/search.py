@@ -8,6 +8,24 @@ search_bp = Blueprint('search', __name__)
 
 logger = logging.getLogger(__name__)
 
+def fetch_spellcheck_suggestions(query):
+    params = {
+        "q": f"cleaned_text:({query})",
+        "wt": "json"
+    }
+    data = query_solr('spell', params)
+    suggestions = []
+    if "spellcheck" in data and "suggestions" in data["spellcheck"]:
+        raw_suggestions = data["spellcheck"]["suggestions"]
+        for i in range(0, len(raw_suggestions), 2):
+            if i + 1 < len(raw_suggestions):
+                word = raw_suggestions[i]
+                suggestion_info = raw_suggestions[i + 1]
+                for s in suggestion_info.get("suggestion", []):
+                    suggestions.append(s["word"])
+        return suggestions
+    return []
+
 @search_bp.route('/search')
 def search():
     raw_query = request.args.get('q', '*:*')
@@ -107,33 +125,13 @@ def search():
         print(f"Solr Query: {solr_query}")
         print(f"Filter Queries: {fq}")
 
-        results = query_solr(params)
-
-        # SPELL CHECK LOGIC
-        spellcheck_suggestions = {}
-        collation = None
-        if 'spellcheck' in results and results['spellcheck']:
-            spellcheck_data = results['spellcheck']
-            
-            if 'suggestions' in spellcheck_data:
-                suggestions = spellcheck_data['suggestions']
-                for i in range(0, len(suggestions), 2):
-                    if i + 1 < len(suggestions):
-                        word = suggestions[i]
-                        suggestion_info = suggestions[i + 1]
-                        if 'suggestion' in suggestion_info:
-                            spellcheck_suggestions[word] = suggestion_info['suggestion']
-            
-            if 'collations' in spellcheck_data and spellcheck_data['collations']:
-                collations = spellcheck_data['collations']
-                if len(collations) > 1 and collations[0] == 'collation':
-                    for i in range(1, len(collations), 2):
-                        if i+1 < len(collations) and isinstance(collations[i+1], dict) and 'collationQuery' in collations[i+1]:
-                            collation = collations[i+1]['collationQuery']
-                            break
-
+        results = query_solr('select', params)
         docs = results['response'].get('docs', [])
         num_found = results['response'].get('numFound', 0)
+
+        spellcheck_alternatives = []
+        if num_found == 0 and raw_query and raw_query != '*:*':
+            spellcheck_alternatives = fetch_spellcheck_suggestions(raw_query)
 
         if num_found > 0 and enable_feedback_rerank:
             doc_ids = [doc['id'] for doc in docs]
@@ -149,7 +147,7 @@ def search():
             if start == num_found:
                 start = max(0, start - rows)
             params['start'] = start
-            results = query_solr(params)
+            results = query_solr('select', params)
 
         exchanges = get_facet_values('exchange')
         content_types = get_facet_values('type')
@@ -181,7 +179,8 @@ def search():
             "selected_sentiment": sentiment,
             "selected_feature": feature,
             "start_date": start_date,
-            "end_date": end_date
+            "end_date": end_date,
+            "spellcheck_alternatives": spellcheck_alternatives
         })
     except Exception as e:
         error_message = f"Error searching Solr: {str(e)}"

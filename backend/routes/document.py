@@ -17,7 +17,7 @@ def view_document(doc_id):
     }
 
     try:
-        results = query_solr(params)
+        results = query_solr('select', params)
 
         if results['response']['numFound'] > 0:
             doc = results['response']['docs'][0]
@@ -36,7 +36,7 @@ def view_document(doc_id):
                         'wt': 'json'
                     }
 
-                    parent_results = query_solr(params)
+                    parent_results = query_solr('select', params)
 
                     if parent_results['response']['numFound'] > 0:
                         related_docs.append(parent_results['response']['docs'][0])
