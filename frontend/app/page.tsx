@@ -37,7 +37,7 @@ const suggestions: Record<string, string> = {
   "Coinbase customer service": "q=coinbase+customer+service&feature=customer_service", // Needs investigation (&feature)
   "security issues": "q=security+issues&feature=security",
   "degraded performance": "q=degraded+performance&feature=performance", // Needs investigation (&feature)
-  "Appealing user interface": "q=appealing+user+interface&feature=user_interface",
+  "user interface": "q=user+interface&feature=user_interface",
 }
 
 const exchangeOptions = [
@@ -57,6 +57,7 @@ export default function Home() {
   const [startDate, setStartDate] = useState<Date>()
   const [endDate, setEndDate] = useState<Date>()
   const [type, setType] = useState("")
+  const [feature, setFeature] = useState("")
   const [exchanges, setExchanges] = useState<string[]>([])
 
   const router = useRouter()
@@ -207,7 +208,7 @@ export default function Home() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="col-span-2">
+            <div>
               <DropdownMenuLabel>Exchanges</DropdownMenuLabel>
               <Popover>
                 <PopoverTrigger asChild>
@@ -239,6 +240,25 @@ export default function Home() {
                   </div>
                 </PopoverContent>
               </Popover>
+            </div>
+            <div>
+              <DropdownMenuLabel>Features</DropdownMenuLabel>
+              <Select
+                value={feature}
+                onValueChange={setFeature}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Choose feature" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="fees">Exchange Fees</SelectItem>
+                  <SelectItem value="user_interface">User Interface</SelectItem>
+                  <SelectItem value="customer_service">Customer Service</SelectItem>
+                  <SelectItem value="security">Security</SelectItem>
+                  <SelectItem value="coin_listings">Coin Listings</SelectItem>
+                  <SelectItem value="performance">Performance</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
