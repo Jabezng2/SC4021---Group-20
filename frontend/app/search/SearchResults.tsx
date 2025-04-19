@@ -75,6 +75,12 @@ type SearchResult = {
   rating?: number;
   date?: string;
   type: string;
+  user_interface?: number;
+  performance?: number;
+  fees?: number;
+  security?: number;
+  coin_listings?: number;
+  customer_service?: number;
 };
 
 const exchangeLogos: Record<string, { name: string; logo: string }> = {
@@ -557,7 +563,7 @@ export default function SearchResults() {
                 )}
 
                 {Object.entries(featureBadgeConfig).map(([key, { label, color }]) => {
-                  const score = (doc as any)[key];
+                  const score = doc[key as keyof SearchResult];
                   if (typeof score === "number" && score > 0.5) {
                     return (
                       <Badge
