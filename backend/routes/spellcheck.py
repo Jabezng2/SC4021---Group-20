@@ -1,5 +1,6 @@
 import logging
 from flask import Blueprint, request, jsonify
+from backend.solr_client import query_solr
 
 search_bp = Blueprint('search', __name__)
 
@@ -26,10 +27,8 @@ def spellcheck():
     }
 
     try:
-        # Send request to Solr
-        solr_url = 'http://localhost:8983/solr/crypto_opinions/select'
-        response = requests.get(solr_url, params=params)
-        data = response.json()
+
+        data = query_solr(params)
 
         suggestions = {}
         collation = None
