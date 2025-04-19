@@ -73,6 +73,13 @@ def search():
         'sort': 'reddit_score desc, rating desc',
         'fl': 'id,text,cleaned_text,platform,source,type,exchange,date,reddit_score,rating,word_count,sentiment,sentiment_score,fees,user_interface,customer_service,security,coin_listings,performance',
         'wt': 'json',
+        'spellcheck': 'on',
+        'spellcheck.dictionary': 'default',
+        'spellcheck.count': 5,
+        'spellcheck.collate': 'true',
+        'spellcheck.maxCollations': 3,
+        'spellcheck.maxCollationTries': 5,
+        'spellcheck.collateExtendedResults': 'true'
     }
 
     def get_normalized_score(doc, feedback_score=0):
@@ -101,6 +108,30 @@ def search():
         print(f"Filter Queries: {fq}")
 
         results = query_solr(params)
+
+        # SPELL CHECK LOGIC
+        spellcheck_suggestions = {}
+        collation = None
+        if 'spellcheck' in results and results['spellcheck']:
+            spellcheck_data = results['spellcheck']
+            
+            if 'suggestions' in spellcheck_data:
+                suggestions = spellcheck_data['suggestions']
+                for i in range(0, len(suggestions), 2):
+                    if i + 1 < len(suggestions):
+                        word = suggestions[i]
+                        suggestion_info = suggestions[i + 1]
+                        if 'suggestion' in suggestion_info:
+                            spellcheck_suggestions[word] = suggestion_info['suggestion']
+            
+            if 'collations' in spellcheck_data and spellcheck_data['collations']:
+                collations = spellcheck_data['collations']
+                if len(collations) > 1 and collations[0] == 'collation':
+                    for i in range(1, len(collations), 2):
+                        if i+1 < len(collations) and isinstance(collations[i+1], dict) and 'collationQuery' in collations[i+1]:
+                            collation = collations[i+1]['collationQuery']
+                            break
+
         docs = results['response'].get('docs', [])
         num_found = results['response'].get('numFound', 0)
 
