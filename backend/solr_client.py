@@ -48,7 +48,7 @@ def get_facet_values(field_name):
         print(f"Error fetching {field_name} facets: {e}")
         return []  # Return empty list on error
 
-def query_solr(params):
-    response = requests.get(f"{SOLR_URL}/select", params=params)
+def query_solr(type, params):
+    response = requests.get(f"{SOLR_URL}/{type}", params=params)
     response.raise_for_status()
     return response.json()
