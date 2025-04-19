@@ -54,6 +54,9 @@ bin/solr create -c crypto_opinions (Unix / MacOS) or bin\solr.cmd create -c cryp
 ```bash
 cp ../managed-schema.xml server/solr/crypto_opinions/conf/
 ```
+```
+cp ..solrconfig.xml/.xml server/solr/crypto_opinions/conf/
+```
 - Verify that the managed-schema.xml has been copied to the conf folder in the core
 - Restart Solr: `bin/solr restart` (Unix) or `bin\solr.cmd restart -p 8983` (Windows)
 
@@ -95,10 +98,13 @@ npm run dev
 - Ensure that you have CMake installed
 - Ensure that you installed solr-9.8.1 and that solr-9.8.1 folder is in the solr directory
 - Ensure that you have the virtual environment activated
-- In the root directory run the dev.sh script to generate the build folder
+- In the root directory run the following:
 ```bash
-./dev.sh start_backend
+cmake -S . -B build
 ```
 ```bash
-./dev.sh start_frontend
+cmake --build build --target start_backend
+```
+```bash
+cmake --build build --target start_frontend
 ```
