@@ -87,6 +87,15 @@ const exchangeLogos: Record<string, { name: string; logo: string }> = {
   bybit: { name: "Bybit.com", logo: "/logos/bybit.png" },
 };
 
+const featureBadgeConfig: Record<string, { label: string; color: string }> = {
+  user_interface: { label: "User Interface", color: "#2563eb" },       // blue-600
+  performance: { label: "Performance", color: "#16a34a" },             // green-600
+  fees: { label: "Fees", color: "#f59e0b" },                           // amber-500
+  security: { label: "Security", color: "#ef4444" },                  // red-500
+  coin_listings: { label: "Coin Listings", color: "#8b5cf6" },        // violet-500
+  customer_service: { label: "Customer Service", color: "#0ea5e9" }   // sky-500
+};
+
 export default function SearchResults() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -464,7 +473,7 @@ export default function SearchResults() {
                         e.stopPropagation(); // Prevent click from bubbling up to Card
                         toggleExpand(doc.id);
                       }}
-                      className="p-0 h-auto text-sm font-semibold text-blue-600 self-start hover:underline underline-offset-2"
+                      className="p-0 h-auto text-sm font-bold text-blue-600 self-start hover:underline underline-offset-2"
                     >
                       {isExpanded ? "Show less" : "Show more"}
                     </Button>
@@ -483,7 +492,7 @@ export default function SearchResults() {
                       <Badge
                         key={ex}
                         variant="outline"
-                        className="flex items-center gap-1 bg-blue-100 text-blue-800 font-bold"
+                        className="flex font-bold items-center gap-1 bg-blue-100 text-blue-800 font-bold"
                       >
                         <Image
                           src={exchange.logo}
@@ -497,7 +506,7 @@ export default function SearchResults() {
                     );
                 })}
                 {doc.source && (
-                  <Badge variant="secondary" className="bg-purple-100 text-purple-800 font-bold">
+                  <Badge variant="secondary" className="font-bold bg-purple-100 text-purple-800 font-bold">
                     Source: {capitalize(doc.source)}
                   </Badge>
                 )}
@@ -546,6 +555,22 @@ export default function SearchResults() {
                     Date: {new Date(doc.date).toLocaleDateString()}
                   </Badge>
                 )}
+
+                {Object.entries(featureBadgeConfig).map(([key, { label, color }]) => {
+                  const score = (doc as any)[key];
+                  if (typeof score === "number" && score > 0.5) {
+                    return (
+                      <Badge
+                        key={key}
+                        style={{ backgroundColor: color, color: "white" }}
+                        className="font-bold"
+                      >
+                        {label}: {score.toFixed(2)}
+                      </Badge>
+                    );
+                  }
+                  return null;
+                })}
               </CardFooter>
               <div className="flex items-center gap-2 px-4 py-2 border-t mt-2">
                 {!feedbackGiven[doc.id] ? (
