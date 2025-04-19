@@ -95,6 +95,7 @@ export default function SearchResults() {
   const [loading, setLoading] = useState(true);
   const [results, setResults] = useState<SearchResult[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [spellSuggestions, setSpellSuggestions] = useState<string[] | null>(null);
   const [expandedMap, setExpandedMap] = useState<Record<string, boolean>>({});
   const [feedbackGiven, setFeedbackGiven] = useState<Record<string, boolean>>({});
 
@@ -107,7 +108,6 @@ export default function SearchResults() {
         },
         body: JSON.stringify({ doc_id: docId, value }),
       });
-
       setFeedbackGiven((prev) => ({ ...prev, [docId]: true }));
     } catch (err) {
       console.error("Feedback error:", err);
@@ -133,6 +133,7 @@ export default function SearchResults() {
 
         if (res.ok) {
           setResults(data.results || []);
+          setSpellSuggestions(data.spellcheck_alternatives || null);
         } else {
           setError(data.error || "Unknown error");
         }
@@ -148,11 +149,7 @@ export default function SearchResults() {
 
   const handleSearch = () => {
     if (!searchInput.trim()) return;
-
-    const params = new URLSearchParams({
-      q: searchInput.trim(),
-    });
-
+    const params = new URLSearchParams({ q: searchInput.trim() });
     router.push(`/search?${params.toString()}`);
   };
 
@@ -239,11 +236,7 @@ export default function SearchResults() {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="flex items-center gap-2 mb-6">
-        <Button
-          variant="outline"
-          onClick={() => router.push("/")}
-          className="h-12 w-12 p-0 cursor-pointer"
-        >
+        <Button variant="outline" onClick={() => router.push("/")} className="h-12 w-12 p-0 cursor-pointer">
           <Home className="h-12 w-12" />
         </Button>
         <Input
@@ -252,13 +245,29 @@ export default function SearchResults() {
           placeholder="Search something..."
           className="flex-1 h-12 text-base cursor-text"
         />
-        <Button
-          onClick={handleSearch}
-          className="h-12 text-base px-6 cursor-pointer"
-        >
+        <Button onClick={handleSearch} className="h-12 text-base px-6 cursor-pointer">
           Search
         </Button>
       </div>
+
+      {spellSuggestions && spellSuggestions.length > 0 && (
+        <div className="mb-6">
+          <span className="text-gray-600">Did you mean: </span>
+          {spellSuggestions.map((suggestion, idx) => (
+            <Button
+              key={idx}
+              variant="link"
+              className="text-blue-600 hover:underline"
+              onClick={() => {
+                const params = new URLSearchParams({ q: suggestion });
+                router.push(`/search?${params.toString()}`);
+              }}
+            >
+              {suggestion}
+            </Button>
+          ))}
+        </div>
+      )}
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-2xl font-bold">
           Search Results for:{" "}
