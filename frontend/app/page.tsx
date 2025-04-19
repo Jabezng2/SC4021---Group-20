@@ -63,9 +63,10 @@ export default function Home() {
   const router = useRouter()
 
   const handleSearch = () => {
-    if (!query.trim()) return
-
-    const params = new URLSearchParams({ q: query.trim() })
+    const params = new URLSearchParams()
+    if (query.trim()) params.set("q", query.trim())
+    else params.set("q", "*:*")
+    
     if (sentiment) params.set("sentiment", sentiment)
     if (source) params.set("source", source)
     if (startDate && endDate) {

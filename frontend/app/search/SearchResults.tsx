@@ -163,10 +163,10 @@ export default function SearchResults() {
   }, [query, searchParams]);
 
   const handleSearch = () => {
-    if (!searchInput.trim()) return;
-    const params = new URLSearchParams({ q: searchInput.trim() });
+    const queryValue = searchInput.trim() || "*:*";
+    const params = new URLSearchParams({ q: queryValue });
     router.push(`/search?${params.toString()}`);
-  };
+  };  
 
   const getSentimentData = () => {
     const counts = [
