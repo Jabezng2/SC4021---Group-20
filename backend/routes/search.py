@@ -2,6 +2,7 @@ import logging
 from flask import Blueprint, request, jsonify
 from backend.solr_client import query_solr, get_facet_values
 from backend.feedback_store import bulk_feedback_scores
+import math
 
 search_bp = Blueprint('search', __name__)
 
@@ -75,9 +76,25 @@ def search():
     }
 
     def get_normalized_score(doc, feedback_score=0):
-        normalized_reddit = doc.get('reddit_score', 0) / 100.0  # scale reddit to ~0–40
-        normalized_rating = doc.get('rating', 0)  # 0–5
-        return feedback_score * 10 + normalized_reddit + normalized_rating
+        # Normalize Reddit score to the range of 0–5 using logarithmic scaling
+        max_reddit_score = 1000  # Adjust based on typical Reddit score ranges
+        normalized_reddit = math.log(doc.get('reddit_score', 0) + 1) / math.log(max_reddit_score + 1) * 5
+
+        # Normalize rating (already in the range of 0–5)
+        normalized_rating = doc.get('rating', 0)
+
+        # Weights for combining scores
+        weight_reddit = 0.6
+        weight_rating = 0.4
+        feedback_weight = 10
+
+        # Composite score
+        composite_score = (weight_reddit * normalized_reddit) + (weight_rating * normalized_rating)
+
+        # Final score with feedback adjustment
+        final_score = composite_score + (feedback_score * feedback_weight)
+        
+        return final_score
 
     try:
         print(f"Solr Query: {solr_query}")

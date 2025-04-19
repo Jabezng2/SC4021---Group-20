@@ -71,7 +71,7 @@ type SearchResult = {
   exchange?: string[];
   sentiment?: string;
   source?: string;
-  reddit_score?: number;
+  normalized_reddit_score?: number;
   rating?: number;
   date?: string;
   type: string;
@@ -507,10 +507,10 @@ export default function SearchResults() {
                   </Badge>
                 )}
 
-                {doc.source?.startsWith("r/") && typeof doc.reddit_score === "number" && (
+                {doc.source?.startsWith("r/") && typeof doc.normalized_reddit_score === "number" && (
                   <>
                     <Badge className="bg-orange-500 text-white font-bold">
-                      Reddit Score: {doc.reddit_score}
+                      Reddit Score: {doc.normalized_reddit_score}
                     </Badge>
                     <Badge
                       className={`text-white font-bold ${
