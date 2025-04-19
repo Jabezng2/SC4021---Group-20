@@ -55,7 +55,7 @@ bin/solr create -c crypto_opinions (Unix / MacOS) or bin\solr.cmd create -c cryp
 cp ../managed-schema.xml server/solr/crypto_opinions/conf/
 ```
 ```
-cp ..solrconfig.xml/.xml server/solr/crypto_opinions/conf/
+cp ../solrconfig.xml/.xml server/solr/crypto_opinions/conf/
 ```
 - Verify that the managed-schema.xml has been copied to the conf folder in the core
 - Restart Solr: `bin/solr restart` (Unix) or `bin\solr.cmd restart -p 8983` (Windows)
