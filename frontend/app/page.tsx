@@ -75,7 +75,8 @@ export default function Home() {
     if (type) params.set("type", type)
     if (exchanges.length > 0) {
       params.set("exchange", exchanges.join("+"))
-    }    
+    }
+    if (feature) params.set("feature", feature)
 
     router.push(`/search?${params.toString()}`)
   }

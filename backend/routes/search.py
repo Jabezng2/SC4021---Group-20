@@ -103,7 +103,11 @@ def search():
     def get_normalized_score(doc, feedback_score=0):
         # Normalize Reddit score to the range of 0–5 using logarithmic scaling
         max_reddit_score = 1000  # Adjust based on typical Reddit score ranges
-        normalized_reddit = math.log(doc.get('reddit_score', 0) + 1) / math.log(max_reddit_score + 1) * 5
+        raw_reddit_score = doc.get('reddit_score', 0)
+
+        # Prevent math domain error by clamping to a minimum of 0
+        safe_reddit_score = max(raw_reddit_score, 0)
+        normalized_reddit = math.log(safe_reddit_score + 1) / math.log(max_reddit_score + 1) * 5
 
         # Normalize rating (already in the range of 0–5)
         normalized_rating = doc.get('rating', 0)
@@ -118,7 +122,7 @@ def search():
 
         # Final score with feedback adjustment
         final_score = composite_score + (feedback_score * feedback_weight)
-        
+
         return final_score
 
     try:
