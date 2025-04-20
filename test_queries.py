@@ -1,22 +1,23 @@
 import requests
 import time
 
-queries = [
-    {"query": "crypto-currency"},
-    {"query": "crypto"}
-]
-SOLR_URL = "http://localhost:8983/solr/crypto_opinions/select"
+queries = [{"query": "best trading"},
+    {"query": "bad platform"},
+    {"query": "coinbase customer service"},
+    {"query": "dogecoin"},
+    {"query": "crypto scam"}]
 
-top_k = 5
+SOLR_URL = "http://localhost:8983/solr/crypto_opinions/select"
+top_k = 1
 
 def run_test():
     total_time = 0
 
     for q in queries:
         params = {
-            "q": f'cleaned_text:({q["query"]})',  # or use text: if you're not using stemmed/cleaned tokens
+            "q": f'cleaned_text:({q["query"]})',
             "rows": top_k,
-            "fl": "id"
+            "fl": "id"  # Only retrieve the document ID
         }
 
         start = time.time()
@@ -36,7 +37,9 @@ def run_test():
             print(f"Query: {q['query']} | No results found | Time: {elapsed*1000:.2f} ms")
             continue
 
-        print(f"Query: {q['query']} | Found {len(docs)} documents | Time: {elapsed*1000:.2f} ms")
+        for doc in docs:
+            doc_id = doc.get('id', 'No ID available')
+            print(f"Query: {q['query']} | Time: {elapsed*1000:.2f} ms | Document ID of First Result: {doc_id}")
 
     avg_time = total_time / len(queries)
     print(f"\nAverage Query Time: {avg_time*1000:.2f} ms")
